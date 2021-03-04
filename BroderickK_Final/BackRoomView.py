@@ -1,12 +1,15 @@
 from tkinter import *
 import tkinter.font as tkFont
 import random as rng
-import CalculationLib
+import CalculationLib as mathy
 import re
 
 question_and_answer_area = ''
+reset = False
+
 def add_calculation_text(button_type):
     global question_and_answer_area
+    global reset
     switch = {
         0: "0",
         1: "1",
@@ -27,11 +30,18 @@ def add_calculation_text(button_type):
 
     #Figure out what needs to be added
     add_on = switch.get(button_type, "Error")
-    #Figure out what is already thered
+    #Figure out what is already there
     text_so_far = question_and_answer_area.cget("text")
+    if reset:
+        text_so_far = ''
+        reset = False
+    
+    #To allow 0's
+    match = re.search('[^0]', text_so_far)
+    not_index = match.start() if match else -1
     #Put it together
+    text_so_far = text_so_far[not_index:]
     result_text = text_so_far + add_on
-    result_text = result_text.replace("0", "")
     #Formatted
     # text = f"{result_text:>16}"
     text = result_text.zfill(16)
@@ -48,11 +58,39 @@ def delete_from_question():
 
 def solve_question():
     global question_and_answer_area
+    global reset
+    reset = True
 
     question = question_and_answer_area.cget("text")
     #Gets the numbers and type
-    results = re.search("(\d+(.\d+)?)([+*\/-])(\d+(.\d+)?)", question)
-    pass
+    match = re.search("(\d+(.\d+)?)([+*\/-])(\d+(.\d+)?)", question)
+
+    try:
+        first_num = float(match.group(1))
+        second_num = float(match.group(4))
+    
+        answer = 0
+
+        if '+' in match.group(3): # A + - / or *
+            answer = round(first_num + second_num, 3)
+        elif '-' in match.group(3):
+            answer = round(first_num - second_num, 3)
+        elif '*' in match.group(3):
+            answer = round(first_num * second_num, 3)
+        elif '/' in match.group(3):
+            answer = round(first_num / second_num, 3)
+        else:
+            answer = 'ERROR'
+        
+        text = str(answer).zfill(16)
+        question_and_answer_area.config(text=text)
+    except Exception:
+        text = 'ERROR'.zfill(16)
+        question_and_answer_area.config(text=text)
+
+        
+
+
 
 def create_calculator_canvas(frame):
     global question_and_answer_area
