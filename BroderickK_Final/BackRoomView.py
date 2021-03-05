@@ -2,10 +2,13 @@ from tkinter import *
 import tkinter.font as tkFont
 import random as rng
 import CalculationLib as mathy
+import array as arr
 import re
 
 question_and_answer_area = ''
 reset = False
+homework_questions = []
+day = 1
 
 def add_calculation_text(button_type):
     global question_and_answer_area
@@ -87,9 +90,6 @@ def solve_question():
     except Exception:
         text = 'ERROR'.zfill(16)
         question_and_answer_area.config(text=text)
-
-        
-
 
 
 def create_calculator_canvas(frame):
@@ -201,6 +201,60 @@ def create_calculator_canvas(frame):
 
     return calculator
 
+def create_question(day):
+    # Addition (1)
+    # Subtraction
+    # Multiplication
+    # Division
+    # Mix
+    if day == 5: # Mix encounter
+        question_type = rng.randint(4)
+    else:
+        question_type = day
+
+    first = rng.randint(1, 100)
+    second = rng.randint(1, 100)
+    answer = 0
+    question = str(first) + ' '
+    if question_type == 0:
+        #Addition
+        question += '+ '
+        answer = first + second
+    elif question_type == 1:
+        question += '- '
+        answer = first - second
+    elif question_type == 2:
+        question += '* '
+        answer = first * second
+    elif question_type == 3:
+        question += '/ '
+        answer = first / second
+    
+    question += str(rng.randint(1, 100))
+
+    return [question, answer]
+
+def create_homework_canvas(frame):
+    global day
+    global homework_questions
+    # Difficulty
+    # 10 times
+    # Label => (Num). 
+    #Canvas
+    homework = Canvas(frame, bg='white')
+
+    for i in range(1, 11):
+        question = create_question(day)
+        homework_questions.append(question)
+
+        label_question = Label(homework, anchor='w', bg='white', text=f"{i}. {question[0]}")
+        label_question.grid(row=i, column=0)
+
+        entry_answer = Entry(homework)
+        entry_answer.grid(row = i, column=1)
+
+    return homework
+
 def create_frame(base_root):
     f = Frame(base_root)
 
@@ -211,12 +265,19 @@ def create_frame(base_root):
     calculator = create_calculator_canvas(f)
 
     # Canvas for the homework
-    homework = Canvas(f, bg='white')
+    homework = create_homework_canvas(f)
     homework.pack(side='left', fill='both', expand=True)
     calculator.pack(side='right', fill='both', expand=True)
 
     return f
 
+def set_day(passed_in_day):
+    global day
+    day = passed_in_day
+
+def next_day():
+    global day
+    day += 1
 
 if __name__ == "__main__":
     root = Tk()
