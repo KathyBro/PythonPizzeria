@@ -9,6 +9,31 @@ question_and_answer_area = ''
 reset = False
 homework_questions = []
 day = 1
+score = 0
+minimum_q = 1
+maximum_q = 10
+submit_button = ''
+
+def grade(parent_widget):
+    global homework_questions
+    global score
+    global submit_button
+    submit_button["state"] = "disabled"
+    children_widgets = parent_widget.winfo_children()
+    question_num = 0
+    for child_widget in children_widgets:
+        if child_widget.winfo_class() == 'Entry':
+            try:
+                given_answer = int(child_widget.get())
+                actual_answer = homework_questions[question_num][1]
+
+                if given_answer == actual_answer:
+                    score += 1
+                question_num += 1
+            except:
+                pass
+
+
 
 def add_calculation_text(button_type):
     global question_and_answer_area
@@ -52,14 +77,14 @@ def add_calculation_text(button_type):
     #Set it with a format
     question_and_answer_area.config(text=text)
 
-def delete_from_question():
+def delete_from_question(args=''):
     global question_and_answer_area
     text_as_stands = question_and_answer_area.cget("text")
 
     text_as_stands = text_as_stands[0:len(text_as_stands)-1]
     question_and_answer_area.config(text="0"+text_as_stands)
 
-def solve_question():
+def solve_question_in_calculator(args = ''):
     global question_and_answer_area
     global reset
     reset = True
@@ -81,7 +106,10 @@ def solve_question():
         elif '*' in match.group(3):
             answer = round(first_num * second_num, 3)
         elif '/' in match.group(3):
-            answer = round(first_num / second_num, 3)
+            if second_num != 0:
+                answer = round(first_num / second_num, 3)
+            else:
+                answer = 'ERROR'
         else:
             answer = 'ERROR'
         
@@ -195,13 +223,15 @@ def create_calculator_canvas(frame):
             bg=button_color, 
             relief=RAISED, 
             text='=', 
-            command=lambda: solve_question()
+            command=lambda: solve_question_in_calculator()
             )
     equals.grid(padx=10, pady=10, column=1, row=5)
 
     return calculator
 
 def create_question(day):
+    global minimum_q
+    global maximum_q
     # Addition (1)
     # Subtraction
     # Multiplication
@@ -210,10 +240,10 @@ def create_question(day):
     if day == 5: # Mix encounter
         question_type = rng.randint(4)
     else:
-        question_type = day
+        question_type = day - 1
 
-    first = rng.randint(1, 100)
-    second = rng.randint(1, 100)
+    first = rng.randint(minimum_q, maximum_q)
+    second = rng.randint(minimum_q, maximum_q)
     answer = 0
     question = str(first) + ' '
     if question_type == 0:
@@ -230,13 +260,14 @@ def create_question(day):
         question += '/ '
         answer = first / second
     
-    question += str(rng.randint(1, 100))
+    question += str(second)
 
     return [question, answer]
 
 def create_homework_canvas(frame):
     global day
     global homework_questions
+    global submit_button
     # Difficulty
     # 10 times
     # Label => (Num). 
@@ -252,6 +283,10 @@ def create_homework_canvas(frame):
 
         entry_answer = Entry(homework)
         entry_answer.grid(row = i, column=1)
+
+    submit_assignment = Button(homework, text="Submit Assignment", command=lambda w=homework: grade(w))
+    submit_assignment.grid(row=20, column=0, columnspan=4)
+    submit_button = submit_assignment
 
     return homework
 
@@ -269,6 +304,15 @@ def create_frame(base_root):
     homework.pack(side='left', fill='both', expand=True)
     calculator.pack(side='right', fill='both', expand=True)
 
+    for i in range(10):
+        base_root.bind(str(i), lambda j=i: add_calculation_text(int(j.char)))
+    base_root.bind("+", lambda event: add_calculation_text(10))
+    base_root.bind("-", lambda event: add_calculation_text(11))
+    base_root.bind("*", lambda event: add_calculation_text(12))
+    base_root.bind("/", lambda event: add_calculation_text(13))
+    base_root.bind('<Return>', solve_question_in_calculator)
+    base_root.bind("<BackSpace>", delete_from_question)
+
     return f
 
 def set_day(passed_in_day):
@@ -278,6 +322,10 @@ def set_day(passed_in_day):
 def next_day():
     global day
     day += 1
+
+def get_grade():
+    global score
+    return score
 
 if __name__ == "__main__":
     root = Tk()
