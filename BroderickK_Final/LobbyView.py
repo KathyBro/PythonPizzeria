@@ -46,6 +46,7 @@ def pressing(event):
         up('')
 
 def location_tracker(event):
+    print(event)
     pass
 
 def create_frame(base_root):
@@ -82,26 +83,27 @@ def create_frame(base_root):
     # Character
     # character_location = Frame(f, width=450, height=450)
     # character_canvas = Canvas(character_location, width=300, height=300)
-
-    y = 150
-    head = canvas_background.create_oval(100, y,150, y +100, fill='gray90')
+    
+    x = 300
+    y = 345
+    head = canvas_background.create_oval(x, y, x+150, y +150, fill='gray90', width=4)
     player_character.append(head)
 
-    x = 125
-    y += 175
-    stick = canvas_background.create_line(x, y-75, x, y)
+    x += 75
+    y += 225
+    stick = canvas_background.create_line(x, y-75, x, y+75, width=4)
     player_character.append(stick)
 
-    diff_x = 25
-    stick_leg1 = canvas_background.create_line(x, y, x-diff_x, y+50)
+    diff_x = 50
+    stick_leg1 = canvas_background.create_line(x, y+75, x-diff_x, y+135, width=4)
     player_character.append(stick_leg1)
-    stick_leg2 = canvas_background.create_line(x, y, x+diff_x, y+50)
+    stick_leg2 = canvas_background.create_line(x, y+75, x+diff_x, y+135, width=4)
     player_character.append(stick_leg2)
 
     y -= 30
-    stick_arm1 = canvas_background.create_line(x, y, x-30, y-20)
+    stick_arm1 = canvas_background.create_line(x, y, x-30, y-20, width=4)
     player_character.append(stick_arm1)
-    stick_arm2 = canvas_background.create_line(x, y, x+30, y-10)
+    stick_arm2 = canvas_background.create_line(x, y, x+30, y-10, width=4)
     player_character.append(stick_arm2)
 
     # character_canvas.pack()
