@@ -11,7 +11,7 @@ class customer():
             "Timestamp":"2021-01-01T18:21:08.708470"
         }
         self.order_patience = 30000 # 30 seconds
-        self.eat_time = 12000 #2minutes #1200000# 20 minutes
+        self.eat_time = 12000 #2minutes #1200000# 20 minutes # How long it takes to eat and then they are hungry again
         self.is_hungry = False
 
     def place_order(self):

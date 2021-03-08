@@ -1,10 +1,12 @@
 from tkinter import *
-import Customer
+from Customer import customer
 import random as rng
+from tkinter.ttk import *
 
 lobby_canvas = ''
 player_character = []
 customers= []
+customer_bars = []
 order_num = 4
 
 def left(event):
@@ -50,7 +52,8 @@ def pressing(event):
     #     up('')
 
 def take_order(customer_num):
-    pass
+    global customers
+    print(customers[customer_num].is_hungry)
 
 def location_tracker(event):
     global lobby_canvas
@@ -70,29 +73,12 @@ def location_tracker(event):
     else:
         print(x1)
 
-def create_frame(base_root):
-    global lobby_canvas
-    global player_character
-    
-    f = Frame(base_root)
-
-    width = 1100
+def draw_customers(canvas_background):
     height = 700
-    x = width//3
     y = height//2
-
-
-    # Create the background
-    canvas_background = Canvas(f, width=width, height=height)
-    canvas_background.pack()
-
-    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
-
-    # canvas_background.background = image_background
-    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
-
     x = 45
-    # Customers
+
+    
     mr_blueberry = canvas_background.create_oval(x, y-50, x+100, y+300, fill="blue")
 
     x = 525
@@ -101,10 +87,8 @@ def create_frame(base_root):
     x = 775
     lady_lemon = canvas_background.create_oval(x, y-50, x+100, y+300, fill="yellow")
 
-    # Character
-    # character_location = Frame(f, width=450, height=450)
-    # character_canvas = Canvas(character_location, width=300, height=300)
-    
+def draw_character(canvas_background):
+    global player_character
     x = 300
     y = 345
     head = canvas_background.create_oval(x, y, x+150, y +150, fill='gray90', width=4)
@@ -127,10 +111,36 @@ def create_frame(base_root):
     stick_arm2 = canvas_background.create_line(x, y, x+30, y-10, width=4)
     player_character.append(stick_arm2)
 
-    # create_rectangle
+def create_frame(base_root):
+    global lobby_canvas
+    
+    f = Frame(base_root)
+
+    width = 1100
+    height = 700
+    x = width//3
+    y = height//2
+
+    # Create the background
+    canvas_background = Canvas(f, width=width, height=height)
+    canvas_background.grid(column = 0, row = 1, columnspan=10)
+
+    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+
+    # canvas_background.background = image_background
+    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
+
+    # Customers
+    draw_customers(canvas_background)
+
+    # Character    
+    draw_character(canvas_background)
+
+    blueberry_bar = Progressbar(f, orient = HORIZONTAL, length=150, mode = 'indeterminate')
+    customer_bars.append(blueberry_bar)
+    blueberry_bar.grid(column=0, row=1)
 
     base_root.bind("<Key>", pressing)
-
     base_root.bind("<Left>", left)
     base_root.bind("<Right>", right)
     # base_root.bind("<Up>", up)
@@ -151,18 +161,23 @@ def create_customers():
 
     # mr blueberry, miss strawberry, and lady lemon
     for i in range(0, 3):
-        cust = Customer()
+        cust = customer()
         cust.name = customer_names[i]
         cust.order["Flavor"] = flavor[rng.randint(0,1)]
         cust.order["Size"] = size[rng.randint(0,2)]
         cust.order["Order_ID"] = order_num
         order_num += 1
-        cust.order["Table_No"] = i
+        cust.order["Table_No"] = i+1
+        cust.order_patience = rng.randint(30000, 70000)
+        cust.eat_time = rng.randint(12000, 18000)
+
+        customers.append(cust)
 
 if __name__ == "__main__":
     root = Tk()
     root.title("Python Pizzeria")
     root.geometry("1100x800")
+    create_customers()
     lobby = create_frame(root)
     lobby.pack(fill='both', expand=True)
 
