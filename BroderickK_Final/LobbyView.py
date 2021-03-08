@@ -51,6 +51,24 @@ def pressing(event):
     # elif event.char == "w":
     #     up('')
 
+def draw_order_ready(customer_num):
+    global lobby_canvas
+
+    x=0
+    y=350
+
+    if customer_num == 1:
+        x=85
+    elif customer_num == 2:
+        x=560
+    elif customer_num == 3:
+        x=815
+
+    lobby_canvas.create_rectangle(x,y,x+25, y+200, fill="red")
+
+    y += 220
+    lobby_canvas.create_oval(x, y, x+25, y+25, fill="red")
+
 def take_order(customer_num):
     global customers
     print(customers[customer_num].is_hungry)
@@ -77,7 +95,6 @@ def draw_customers(canvas_background):
     height = 700
     y = height//2
     x = 45
-
     
     mr_blueberry = canvas_background.create_oval(x, y-50, x+100, y+300, fill="blue")
 
@@ -136,9 +153,6 @@ def create_frame(base_root):
     # Character    
     draw_character(canvas_background)
 
-    blueberry_bar = Progressbar(f, orient = HORIZONTAL, length=150, mode = 'indeterminate')
-    customer_bars.append(blueberry_bar)
-    blueberry_bar.grid(column=0, row=1)
 
     base_root.bind("<Key>", pressing)
     base_root.bind("<Left>", left)
@@ -179,6 +193,7 @@ if __name__ == "__main__":
     root.geometry("1100x800")
     create_customers()
     lobby = create_frame(root)
+    draw_order_ready(3)
     lobby.pack(fill='both', expand=True)
 
     root.mainloop()
