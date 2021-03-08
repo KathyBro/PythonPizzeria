@@ -1,7 +1,11 @@
 from tkinter import *
+import Customer
+import random as rng
 
 lobby_canvas = ''
 player_character = []
+customers= []
+order_num = 4
 
 def left(event):
     global lobby_canvas
@@ -19,35 +23,52 @@ def right(event):
     for piece in player_character:
         lobby_canvas.move(piece, x, y)
 
-def up(event):
-    global lobby_canvas
-    global player_character
-    x = 0 # Left / right
-    y = -15 # Up / down
-    for piece in player_character:
-        lobby_canvas.move(piece, x, y)
+# def up(event):
+#     global lobby_canvas
+#     global player_character
+#     x = 0 # Left / right
+#     y = -15 # Up / down
+#     for piece in player_character:
+#         lobby_canvas.move(piece, x, y)
 
-def down(event):
-    global lobby_canvas
-    global player_character
-    x = 0 # Left / right
-    y = 15 # Up / down
-    for piece in player_character:
-        lobby_canvas.move(piece, x, y)
+# def down(event):
+#     global lobby_canvas
+#     global player_character
+#     x = 0 # Left / right
+#     y = 15 # Up / down
+#     for piece in player_character:
+#         lobby_canvas.move(piece, x, y)
 
 def pressing(event):
     if event.char == "a":
         left('')
     elif event.char == "d":
         right('')
-    elif event.char == "s":
-        down('')
-    elif event.char == "w":
-        up('')
+    # elif event.char == "s":
+    #     down('')
+    # elif event.char == "w":
+    #     up('')
+
+def take_order(customer_num):
+    pass
 
 def location_tracker(event):
-    print(event)
-    pass
+    global lobby_canvas
+    global player_character
+    coords = lobby_canvas.coords(player_character[0])
+    x1 = coords[0]
+
+    if x1 >= 0 and x1 <=90:
+        print("Customer 1")
+        take_order(0)
+    elif x1 >= 405 and x1 <= 570:
+        print("Customer 2")
+        take_order(1)
+    elif x1 >= 660 and x1 <=840:
+        print("Customer 3")
+        take_order(2)
+    else:
+        print(x1)
 
 def create_frame(base_root):
     global lobby_canvas
@@ -65,10 +86,10 @@ def create_frame(base_root):
     canvas_background = Canvas(f, width=width, height=height)
     canvas_background.pack()
 
-    image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
 
-    canvas_background.background = image_background
-    bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
+    # canvas_background.background = image_background
+    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
 
     x = 45
     # Customers
@@ -78,7 +99,7 @@ def create_frame(base_root):
     miss_strawberry = canvas_background.create_oval(x, y-50, x+100, y+300, fill="pink")
 
     x = 775
-    miss_anxious = canvas_background.create_oval(x, y-50, x+100, y+300, fill="yellow")
+    lady_lemon = canvas_background.create_oval(x, y-50, x+100, y+300, fill="yellow")
 
     # Character
     # character_location = Frame(f, width=450, height=450)
@@ -106,26 +127,41 @@ def create_frame(base_root):
     stick_arm2 = canvas_background.create_line(x, y, x+30, y-10, width=4)
     player_character.append(stick_arm2)
 
-    # character_canvas.pack()
-    # character_location.pack()
-
-
     # create_rectangle
 
     base_root.bind("<Key>", pressing)
 
     base_root.bind("<Left>", left)
     base_root.bind("<Right>", right)
-    base_root.bind("<Up>", up)
-    base_root.bind("<Down>", down)
+    # base_root.bind("<Up>", up)
+    # base_root.bind("<Down>", down)
     base_root.bind("<space>", location_tracker)
 
     lobby_canvas = canvas_background
 
     return f
 
+def create_customers():
+    global customers
+    global order_num
+    flavor = ["CHEESE", "PEPPERONI"]
+    size = ["S", "M", "L"]
+    crust = ["THIN", "PAN", "STUFFED"]
+    customer_names = ["Mr. Blueberry", "Miss Strawberry", "Lady Lemon"]
+
+    # mr blueberry, miss strawberry, and lady lemon
+    for i in range(0, 3):
+        cust = Customer()
+        cust.name = customer_names[i]
+        cust.order["Flavor"] = flavor[rng.randint(0,1)]
+        cust.order["Size"] = size[rng.randint(0,2)]
+        cust.order["Order_ID"] = order_num
+        order_num += 1
+        cust.order["Table_No"] = i
+
 if __name__ == "__main__":
     root = Tk()
+    root.title("Python Pizzeria")
     root.geometry("1100x800")
     lobby = create_frame(root)
     lobby.pack(fill='both', expand=True)
