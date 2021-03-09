@@ -67,7 +67,6 @@ def delete_pizza_order(order_id):
     print(req.content)
 
     
-
 if __name__ == '__main__':
     get_auth()
     create_pizza_order("NORMAL", "CHICKEN-FAJITA", 3, "L", 3, "2019-12-03T18:21:08.710006")
@@ -75,3 +74,5 @@ if __name__ == '__main__':
     # print('-' * 50)
     # delete_pizza_order(4)
     # get_pizza_orders()
+else:
+    get_auth()

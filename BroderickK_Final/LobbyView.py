@@ -1,12 +1,12 @@
 from tkinter import *
 from Customer import customer
+import PizzaAPIConnection as pizza
 import random as rng
 from tkinter.ttk import *
 
 lobby_canvas = ''
 player_character = []
 customers= []
-customer_bars = []
 order_num = 4
 
 def left(event):
@@ -51,27 +51,49 @@ def pressing(event):
     # elif event.char == "w":
     #     up('')
 
+def start_countdowns(base_root):
+    global customers
+    global lobby_canvas
+
+    base_root.after(customers[0].eat_time, draw_order_ready(0))
+    base_root.after(customers[1].eat_time, draw_order_ready(1))
+    base_root.after(customers[2].eat_time, draw_order_ready(2))
+
+
 def draw_order_ready(customer_num):
     global lobby_canvas
+    global customers
 
     x=0
     y=350
 
-    if customer_num == 1:
+    if customer_num == 0:
         x=85
-    elif customer_num == 2:
+    elif customer_num == 1:
         x=560
-    elif customer_num == 3:
+    elif customer_num == 2:
         x=815
 
-    lobby_canvas.create_rectangle(x,y,x+25, y+200, fill="red")
+    lobby_canvas.create_rectangle(x,y,x+25, y+200, fill="red", tags=(f'exclamation{customer_num}'))
+
+    customers[customer_num].is_hungry = True
 
     y += 220
-    lobby_canvas.create_oval(x, y, x+25, y+25, fill="red")
+    lobby_canvas.create_oval(x, y, x+25, y+25, fill="red", tags=(f'exclamation{customer_num}'))
 
 def take_order(customer_num):
     global customers
+    global lobby_canvas
     print(customers[customer_num].is_hungry)
+
+    if customers[customer_num].is_hungry:
+        cust = customers[customer_num]
+        # Remove exclamation point
+        lobby_canvas.delete(f'exclamation{customer_num}')
+        # Send order to API
+        pizza.create_pizza_order(cust.order["Crust"], cust.order["Flavor"], cust.order["Order_ID"], cust.order["Size"], cust.order["Table_No"])
+        # Customer isn't hungry
+        customers[customer_num].is_hungry = False
 
 def location_tracker(event):
     global lobby_canvas
@@ -180,6 +202,7 @@ def create_customers():
         cust.order["Flavor"] = flavor[rng.randint(0,1)]
         cust.order["Size"] = size[rng.randint(0,2)]
         cust.order["Order_ID"] = order_num
+        cust.order["Crust"] = crust[rng.randint(0,2)]
         order_num += 1
         cust.order["Table_No"] = i+1
         cust.order_patience = rng.randint(30000, 70000)
@@ -187,13 +210,14 @@ def create_customers():
 
         customers.append(cust)
 
+
 if __name__ == "__main__":
     root = Tk()
     root.title("Python Pizzeria")
     root.geometry("1100x800")
     create_customers()
     lobby = create_frame(root)
-    draw_order_ready(3)
+    # draw_order_ready(2)
     lobby.pack(fill='both', expand=True)
 
     root.mainloop()
