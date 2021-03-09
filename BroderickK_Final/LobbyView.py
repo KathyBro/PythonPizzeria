@@ -8,6 +8,7 @@ lobby_canvas = ''
 player_character = []
 customers= []
 order_num = 4
+base_root = ''
 
 def left(event):
     global lobby_canvas
@@ -51,35 +52,34 @@ def pressing(event):
     # elif event.char == "w":
     #     up('')
 
-def start_countdowns(base_root):
-    global customers
-    global lobby_canvas
-
-    base_root.after(customers[0].eat_time, draw_order_ready(0))
-    base_root.after(customers[1].eat_time, draw_order_ready(1))
-    base_root.after(customers[2].eat_time, draw_order_ready(2))
+def loop(customer_num):
+    global base_root
+    draw_order_ready(customer_num)
+    base_root.after(customers[customer_num].eat_time, loop(customer_num))
 
 
 def draw_order_ready(customer_num):
     global lobby_canvas
     global customers
 
-    x=0
-    y=350
+    if customers[customer_num].is_hungry:
+        x=0
+        y=350
 
-    if customer_num == 0:
-        x=85
-    elif customer_num == 1:
-        x=560
-    elif customer_num == 2:
-        x=815
+        if customer_num == 0:
+            x=85
+        elif customer_num == 1:
+            x=560
+        elif customer_num == 2:
+            x=815
 
-    lobby_canvas.create_rectangle(x,y,x+25, y+200, fill="red", tags=(f'exclamation{customer_num}'))
+        tag = f"exclamation{customer_num}"
+        line = lobby_canvas.create_rectangle(x,y,x+25, y+200, fill="red", tag=tag)
 
-    customers[customer_num].is_hungry = True
+        customers[customer_num].is_hungry = True
 
-    y += 220
-    lobby_canvas.create_oval(x, y, x+25, y+25, fill="red", tags=(f'exclamation{customer_num}'))
+        y += 220
+        circle = lobby_canvas.create_oval(x, y, x+25, y+25, fill="red", tag=tag)
 
 def take_order(customer_num):
     global customers
@@ -91,9 +91,10 @@ def take_order(customer_num):
         # Remove exclamation point
         lobby_canvas.delete(f'exclamation{customer_num}')
         # Send order to API
-        pizza.create_pizza_order(cust.order["Crust"], cust.order["Flavor"], cust.order["Order_ID"], cust.order["Size"], cust.order["Table_No"])
+        # pizza.create_pizza_order(cust.order["Crust"], cust.order["Flavor"], cust.order["Order_ID"], cust.order["Size"], cust.order["Table_No"])
         # Customer isn't hungry
         customers[customer_num].is_hungry = False
+
 
 def location_tracker(event):
     global lobby_canvas
@@ -163,6 +164,7 @@ def create_frame(base_root):
     # Create the background
     canvas_background = Canvas(f, width=width, height=height)
     canvas_background.grid(column = 0, row = 1, columnspan=10)
+    lobby_canvas = canvas_background
 
     # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
 
@@ -182,8 +184,6 @@ def create_frame(base_root):
     # base_root.bind("<Up>", up)
     # base_root.bind("<Down>", down)
     base_root.bind("<space>", location_tracker)
-
-    lobby_canvas = canvas_background
 
     return f
 
@@ -205,8 +205,12 @@ def create_customers():
         cust.order["Crust"] = crust[rng.randint(0,2)]
         order_num += 1
         cust.order["Table_No"] = i+1
-        cust.order_patience = rng.randint(30000, 70000)
-        cust.eat_time = rng.randint(12000, 18000)
+        min = 10000 #30000
+        max = 20000 #70000
+        cust.order_patience = rng.randint(min, max)
+        min = 10000 #12000
+        max = 15000 #18000
+        cust.eat_time = rng.randint(min, max)
 
         customers.append(cust)
 
@@ -215,8 +219,12 @@ if __name__ == "__main__":
     root = Tk()
     root.title("Python Pizzeria")
     root.geometry("1100x800")
+    base_root = root
     create_customers()
     lobby = create_frame(root)
+    root.after(0, loop(0))
+    root.after(0, loop(1))
+    root.after(0, loop(2))
     # draw_order_ready(2)
     lobby.pack(fill='both', expand=True)
 
