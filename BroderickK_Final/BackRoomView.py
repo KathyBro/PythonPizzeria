@@ -18,7 +18,7 @@ def grade(parent_widget):
     global homework_questions
     global score
     global submit_button
-    submit_button["state"] = "disabled"
+    # submit_button["state"] = "disabled"
     children_widgets = parent_widget.winfo_children()
     question_num = 0
     for child_widget in children_widgets:

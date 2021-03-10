@@ -11,6 +11,19 @@ import os.path
 my_player = ''
 file_name = "PythonPizzera.txt"
 
+def save_game():
+    global my_player
+    global file_name
+
+    calculate_percentage_score()
+    
+    with open(file_name, 'w') as file:
+        name = my_player.name
+        grade = my_player.math_grade
+        current_day = my_player.current_day
+        player_info = [{"name":name, "math_grade":grade, "day":current_day}]
+        file.write(json.dumps(player_info, indent=4))
+
 def raise_frame(frame):
     KitchenView.get_newest_order()
     frame.tkraise()
@@ -22,21 +35,16 @@ def find_player():
         my_player = player()
         with open(file_name, 'r') as file:
             player_info = json.loads(file.read())
-            my_player.name = player_info["name"]
-            my_player.math_grade = player_info["math_grade"]
-            my_player.current_day = player_info["day"]
+            my_player.name = player_info[0]['name']
+            my_player.math_grade = player_info[0]['math_grade']
+            my_player.current_day = player_info[0]['day']
     else:
         if my_player == '':
             my_player = player()
-        with open(file_name, 'w') as file:
-            name = my_player.name
-            grade = str(my_player.math_grade)
-            current_day = str(my_player.current_day)
-            player_info = '{"name":"' + name + '", "math_grade":"' + grade + '", "day":"' + current_day + '"}'
-            file.write(json.dumps(player_info, indent=4))
+        save_game()
 
 
-def calculate_precentage_score():
+def calculate_percentage_score():
     global my_player
     new_score = BackRoomView.get_grade()
     current_grade = my_player.math_grade
@@ -60,7 +68,7 @@ if __name__ == '__main__':
     lobby_frame = LobbyView.create_frame(root)
 
     for frame in (back_room_frame, kitchen_frame, lobby_frame):
-        frame.grid(row=1, column=0, sticky='news', columnspan=3)
+        frame.grid(row=1, column=0, sticky='news', columnspan=4)
 
     # To be able to switch frames
     back_room_button = Button(root, text='Back Room', command= lambda: raise_frame(back_room_frame))
@@ -70,6 +78,11 @@ if __name__ == '__main__':
     back_room_button.grid(row=0, column=2)
     kitchen_button.grid(row=0, column=1)
     lobby_button.grid(row=0, column=0)
+
+    # Save button
+    save_button = Button(root, text='Save', command= lambda: save_game())
+
+    save_button.grid(row=0, column=3)
 
     LobbyView.create_customers()
     root.after(0, LobbyView.loop())
