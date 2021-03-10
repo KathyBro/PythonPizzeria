@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 
 pizza_canvas = ''
 order = ''
-pizza_image = ''
 
 def fill_new_order():
     global order
@@ -18,12 +17,26 @@ def fill_new_order():
 
 def add_crust():
     global pizza_canvas
-    global pizza_image
 
     pizza_base = Image.open('.\PizzaBread.png')
     pizza_base.resize((400, 400))
     pizza_image = ImageTk.PhotoImage(pizza_base)
     # pizza_image = image_background
+
+    pizza_canvas.background = pizza_image
+    pizza_canvas.create_image(0, 0, anchor=NW, image=pizza_image)
+
+def add_sauce():
+    global pizza_canvas
+
+    pizza_dough = Image.open('.\PizzaBread.png')
+    pizza_dough.resize((400, 400))
+
+    pizza_sauce = Image.open('.\Sauce.png')
+    pizza_sauce.resize((400,400))
+    pizza_dough.paste(pizza_sauce, (20, 40), pizza_sauce)
+
+    pizza_image = ImageTk.PhotoImage(pizza_dough)
 
     pizza_canvas.background = pizza_image
     pizza_canvas.create_image(0, 0, anchor=NW, image=pizza_image)
@@ -83,7 +96,7 @@ def create_frame(base_root):
     # Toppings
     toppings_label = Label(toppings_canvas, text='Toppings', font=crust_font)
     toppings_label.pack(padx=10, pady=(30, 20))
-    sauce_button = Button(toppings_canvas, text='Sauce', width=20)
+    sauce_button = Button(toppings_canvas, text='Sauce', width=20, command= lambda: add_sauce())
     sauce_button.pack(padx=10, pady=10)
     cheese_button = Button(toppings_canvas, text='Cheese', width=20)
     cheese_button.pack(padx=10, pady=10)
