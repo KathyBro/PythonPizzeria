@@ -5,13 +5,17 @@ from PIL import Image, ImageTk
 
 pizza_canvas = ''
 order = ''
+current_order_num = 4
 
 def fill_new_order():
     global order
+    global current_order_num
     # Delete old order
+    connection.delete_pizza_order(current_order_num)
 
     # Get the new order
     orders = connection.get_pizza_orders()
+    print(orders)
     order.config(text='')
     print('Filled new order')
 
