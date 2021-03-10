@@ -34,7 +34,49 @@ def add_sauce():
 
     pizza_sauce = Image.open('.\Sauce.png')
     pizza_sauce.resize((400,400))
-    pizza_dough.paste(pizza_sauce, (20, 40), pizza_sauce)
+    pizza_dough.paste(pizza_sauce, (0, 0), pizza_sauce)
+
+    pizza_image = ImageTk.PhotoImage(pizza_dough)
+
+    pizza_canvas.background = pizza_image
+    pizza_canvas.create_image(0, 0, anchor=NW, image=pizza_image)
+
+def add_cheese():
+    global pizza_canvas
+
+    pizza_dough = Image.open('.\PizzaBread.png')
+    pizza_dough.resize((400, 400))
+
+    pizza_sauce = Image.open('.\Sauce.png')
+    pizza_sauce.resize((400,400))
+    pizza_dough.paste(pizza_sauce, (0, 0), pizza_sauce)
+
+    pizza_cheese = Image.open('.\Cheese.png')
+    pizza_cheese.resize((400, 400))
+    pizza_dough.paste(pizza_cheese, (0, 0), pizza_cheese)
+
+    pizza_image = ImageTk.PhotoImage(pizza_dough)
+
+    pizza_canvas.background = pizza_image
+    pizza_canvas.create_image(0, 0, anchor=NW, image=pizza_image)
+
+def add_pepperoni():
+    global pizza_canvas
+
+    pizza_dough = Image.open('.\PizzaBread.png')
+    pizza_dough.resize((400, 400))
+
+    pizza_sauce = Image.open('.\Sauce.png')
+    pizza_sauce.resize((400,400))
+    pizza_dough.paste(pizza_sauce, (0, 0), pizza_sauce)
+
+    pizza_cheese = Image.open('.\Cheese.png')
+    pizza_cheese.resize((400, 400))
+    pizza_dough.paste(pizza_cheese, (0, 0), pizza_cheese)
+
+    pizza_pepperoni = Image.open('.\Pepperoni.png')
+    pizza_pepperoni.resize((400, 400))
+    pizza_dough.paste(pizza_pepperoni, (0,0), pizza_pepperoni)
 
     pizza_image = ImageTk.PhotoImage(pizza_dough)
 
@@ -98,9 +140,9 @@ def create_frame(base_root):
     toppings_label.pack(padx=10, pady=(30, 20))
     sauce_button = Button(toppings_canvas, text='Sauce', width=20, command= lambda: add_sauce())
     sauce_button.pack(padx=10, pady=10)
-    cheese_button = Button(toppings_canvas, text='Cheese', width=20)
+    cheese_button = Button(toppings_canvas, text='Cheese', width=20, command= lambda: add_cheese())
     cheese_button.pack(padx=10, pady=10)
-    pepperoni_button = Button(toppings_canvas, text='Pepperoni', width=20)
+    pepperoni_button = Button(toppings_canvas, text='Pepperoni', width=20, command= lambda: add_pepperoni())
     pepperoni_button.pack(padx=10, pady=10)
 
     return f
