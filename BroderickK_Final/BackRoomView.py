@@ -32,11 +32,6 @@ def grade(parent_widget):
                 question_num += 1
             except:
                 pass
-    
-    # TODO check if the file exists first
-    with open('PythonPizzeriaData.txt', 'r+') as file:
-        pass
-
 
 
 def add_calculation_text(button_type):
@@ -241,7 +236,7 @@ def create_question(day):
     # Multiplication
     # Division
     # Mix
-    if day == 5: # Mix encounter
+    if day >= 5: # Mix encounter
         question_type = rng.randint(4)
     else:
         question_type = day - 1
@@ -321,11 +316,19 @@ def create_frame(base_root):
 
 def set_day(passed_in_day):
     global day
+    global score
+    score = 0
     day = passed_in_day
 
 def next_day():
     global day
+    global score
+    score = 0
     day += 1
+
+def get_day():
+    global day
+    return day
 
 def get_grade():
     global score

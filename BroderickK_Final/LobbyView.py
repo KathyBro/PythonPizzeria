@@ -90,6 +90,7 @@ def draw_order_ready(customer_num):
 def take_order(customer_num):
     global customers
     global lobby_canvas
+    global order_num
     print(customers[customer_num].is_hungry)
 
     if customers[customer_num].is_hungry:
@@ -97,9 +98,11 @@ def take_order(customer_num):
         # Remove exclamation point
         lobby_canvas.delete(f'exclamation{customer_num}')
         # Send order to API
-        # pizza.create_pizza_order(cust.order["Crust"], cust.order["Flavor"], cust.order["Order_ID"], cust.order["Size"], cust.order["Table_No"])
+        pizza.create_pizza_order(cust.order["Crust"], cust.order["Flavor"], order_num, cust.order["Size"], cust.order["Table_No"])
         # Customer isn't hungry
         customers[customer_num].is_hungry = False
+
+        order_num += 1
 
 
 def location_tracker(event):
@@ -157,10 +160,13 @@ def draw_character(canvas_background):
     stick_arm2 = canvas_background.create_line(x, y, x+30, y-10, width=4)
     player_character.append(stick_arm2)
 
-def create_frame(base_root):
+def create_frame(root):
     global lobby_canvas
+    global base_root
     
-    f = Frame(base_root)
+    base_root = root
+    
+    f = Frame(root)
 
     width = 1100
     height = 700
@@ -209,7 +215,6 @@ def create_customers():
         cust.order["Size"] = size[rng.randint(0,2)]
         cust.order["Order_ID"] = order_num
         cust.order["Crust"] = crust[rng.randint(0,2)]
-        order_num += 1
         cust.order["Table_No"] = i+1
         min = 10000 #30000
         max = 20000 #70000

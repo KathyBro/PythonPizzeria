@@ -7,17 +7,28 @@ pizza_canvas = ''
 order = ''
 current_order_num = 4
 
-def fill_new_order():
+def get_newest_order():
     global order
+    global current_order_num
+
+    orders = connection.get_pizza_orders()
+    for o in orders:
+        if o["Order_ID"] == current_order_num:
+            crust = o["Crust"]
+            flavor = o["Flavor"]
+            table = o["Table_No"]
+            order.config(text=f"Crust: {crust}\tFlavor:{flavor}\tTable:{table}")
+        else:
+            order.config(text="No more orders.")
+
+def fill_new_order():
     global current_order_num
     # Delete old order
     connection.delete_pizza_order(current_order_num)
 
     # Get the new order
-    orders = connection.get_pizza_orders()
-    print(orders)
-    order.config(text='')
-    print('Filled new order')
+    current_order_num += 1
+    get_newest_order()
 
 def add_crust():
     global pizza_canvas
@@ -155,6 +166,7 @@ if __name__ == '__main__':
     root = Tk()
     root.geometry("1100x800")
     kitchen = create_frame(root)
+    get_newest_order()
 
     kitchen.pack(fill='both', expand=True)
 
