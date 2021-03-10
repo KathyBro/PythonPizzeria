@@ -166,10 +166,10 @@ def create_frame(base_root):
     canvas_background.grid(column = 0, row = 1, columnspan=10)
     lobby_canvas = canvas_background
 
-    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+    image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
 
-    # canvas_background.background = image_background
-    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
+    canvas_background.background = image_background
+    bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
 
     # Customers
     draw_customers(canvas_background)
@@ -222,9 +222,9 @@ if __name__ == "__main__":
     base_root = root
     create_customers()
     lobby = create_frame(root)
-    root.after(0, loop(0))
-    root.after(0, loop(1))
-    root.after(0, loop(2))
+    # root.after(0, loop(0))
+    # root.after(0, loop(1))
+    # root.after(0, loop(2))
     # draw_order_ready(2)
     lobby.pack(fill='both', expand=True)
 

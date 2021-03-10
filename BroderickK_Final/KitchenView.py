@@ -35,8 +35,8 @@ def create_frame(base_root):
 
 
     # Crust on left
-    crust_canvas = Canvas(f, width=250)
-    crust_canvas.pack(side='left', fill=Y)
+    # crust_canvas = Canvas(f, width=250)
+    # crust_canvas.pack(side='left', fill=Y)
 
     # Pizza in middle and send
     global pizza_frame
@@ -51,9 +51,11 @@ def create_frame(base_root):
 
     pizza.pack()
 
+    
+
     # toppings_canvas.configure(background = 'red')
     pizza.configure(background='green')
-    crust_canvas.configure(background='pink')
+    # crust_canvas.configure(background='pink')
     # order_canvas.configure(background='blue')
 
     # Order
@@ -65,15 +67,15 @@ def create_frame(base_root):
     # order = order_label
 
     # Thin, stuffed, pan
-    crust_font = tkFont.Font(family='Arial 16 bold', size=12)
-    crust_label = Label(crust_canvas, text='Crust', font=crust_font)
-    crust_label.pack(padx=10, pady=(30, 20))
-    thin_button = Button(crust_canvas, text='Thin', width=20, command= lambda: add_crust())
-    thin_button.pack(padx=10, pady=10)
-    stuffed_button = Button(crust_canvas, text='Stuffed', width=20, command= lambda: add_crust())
-    stuffed_button.pack(padx=10, pady=10)
-    pan_button = Button(crust_canvas, text='Pan',width=20, command= lambda: add_crust())
-    pan_button.pack(padx=10, pady=10)
+    # crust_font = tkFont.Font(family='Arial 16 bold', size=12)
+    # crust_label = Label(crust_canvas, text='Crust', font=crust_font)
+    # crust_label.pack(padx=10, pady=(30, 20))
+    # thin_button = Button(crust_canvas, text='Thin', width=20, command= lambda: add_crust())
+    # thin_button.pack(padx=10, pady=10)
+    # stuffed_button = Button(crust_canvas, text='Stuffed', width=20, command= lambda: add_crust())
+    # stuffed_button.pack(padx=10, pady=10)
+    # pan_button = Button(crust_canvas, text='Pan',width=20, command= lambda: add_crust())
+    # pan_button.pack(padx=10, pady=10)
 
     # Toppings
     # toppings_label = Label(toppings_canvas, text='Toppings', font=crust_font)
@@ -85,6 +87,16 @@ def create_frame(base_root):
     # pepperoni_button = Button(toppings_canvas, text='Pepperoni', width=20)
     # pepperoni_button.pack(padx=10, pady=10)
 
+    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+    pizza_base = Image.open('.\PizzaBread.png')
+    # pizza_base.resize((150, 150))
+    pizza_image = ImageTk.PhotoImage(pizza_base)
+    # pizza_image = image_background
+
+    pizza_canvas = Canvas(pizza)
+    pizza_canvas.pack(pady=10)
+    pizza_canvas.background = pizza_image
+    pizza_canvas.create_image(0, 0, anchor=NW, image=pizza_image)
 
     return f
 
