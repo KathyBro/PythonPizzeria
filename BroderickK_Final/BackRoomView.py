@@ -32,6 +32,10 @@ def grade(parent_widget):
                 question_num += 1
             except:
                 pass
+    
+    # TODO check if the file exists first
+    with open('PythonPizzeriaData.txt', 'r+') as file:
+        pass
 
 
 
