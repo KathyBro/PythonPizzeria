@@ -52,10 +52,16 @@ def pressing(event):
     # elif event.char == "w":
     #     up('')
 
-def loop(customer_num):
+def loop():
     global base_root
-    draw_order_ready(customer_num)
-    base_root.after(customers[customer_num].eat_time, loop(customer_num))
+    for i, cust in enumerate(customers):
+        cust.time_left -= 1
+        if cust.time_left == 0:
+            cust.is_hungry = True
+            draw_order_ready(i)
+            cust.time_left = cust.eat_time
+    
+    base_root.after(1, loop)
 
 
 def draw_order_ready(customer_num):
@@ -166,10 +172,10 @@ def create_frame(base_root):
     canvas_background.grid(column = 0, row = 1, columnspan=10)
     lobby_canvas = canvas_background
 
-    image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
 
-    canvas_background.background = image_background
-    bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
+    # canvas_background.background = image_background
+    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
 
     # Customers
     draw_customers(canvas_background)
@@ -211,6 +217,7 @@ def create_customers():
         min = 10000 #12000
         max = 15000 #18000
         cust.eat_time = rng.randint(min, max)
+        cust.time_left = cust.eat_time
 
         customers.append(cust)
 
@@ -222,9 +229,7 @@ if __name__ == "__main__":
     base_root = root
     create_customers()
     lobby = create_frame(root)
-    # root.after(0, loop(0))
-    # root.after(0, loop(1))
-    # root.after(0, loop(2))
+    root.after(0, loop)
     # draw_order_ready(2)
     lobby.pack(fill='both', expand=True)
 

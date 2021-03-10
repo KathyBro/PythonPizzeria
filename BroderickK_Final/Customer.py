@@ -13,6 +13,7 @@ class customer():
         self.order_patience = 30000 # 30 seconds
         self.eat_time = 12000 #2minutes #1200000# 20 minutes # How long it takes to eat and then they are hungry again
         self.is_hungry = False
+        self.time_left = 12000
 
     def place_order(self):
         return self.order
