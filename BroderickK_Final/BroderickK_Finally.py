@@ -10,13 +10,22 @@ import os.path
 
 my_player = ''
 file_name = "PythonPizzera.txt"
+back_room_frame = ''
+root = ''
 
 def save_game():
     global my_player
     global file_name
+    global back_room_frame
+    global root
 
     calculate_percentage_score()
-    
+    if back_room_frame != '':
+        back_room_frame.grid_forget()
+        back_room_frame = BackRoomView.create_frame(root)
+        back_room_frame.grid(row=1, column=0, sticky='news', columnspan=4)
+        root.update()
+
     with open(file_name, 'w') as file:
         name = my_player.name
         grade = my_player.math_grade
