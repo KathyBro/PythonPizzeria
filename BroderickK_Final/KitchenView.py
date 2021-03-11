@@ -126,10 +126,10 @@ def create_frame(base_root):
 
     
 
-    toppings_canvas.configure(background = 'red')
-    pizza.configure(background='green')
-    crust_canvas.configure(background='pink')
-    order_canvas.configure(background='blue')
+    # toppings_canvas.configure(background = 'red')
+    # pizza.configure(background='green')
+    # crust_canvas.configure(background='pink')
+    # order_canvas.configure(background='blue')
 
     # Order
     submit_button = Button(order_canvas, text='Submit', command= lambda: fill_new_order(), width=10, height=5)
