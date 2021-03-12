@@ -10,6 +10,7 @@ current_order_num = 4
 def get_newest_order():
     global order
     global current_order_num
+    global pizza_canvas
 
     orders = connection.get_pizza_orders()
     for o in orders:
@@ -20,6 +21,8 @@ def get_newest_order():
             order.config(text=f"Crust: {crust}\tFlavor:{flavor}\tTable:{table}")
         else:
             order.config(text="No more orders.")
+
+    pizza_canvas.delete("all")
 
 def fill_new_order():
     global current_order_num

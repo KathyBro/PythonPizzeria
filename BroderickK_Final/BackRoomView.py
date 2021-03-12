@@ -25,7 +25,7 @@ def grade(parent_widget):
         for child_widget in children_widgets:
             if child_widget.winfo_class() == 'Entry':
                 try:
-                    given_answer = int(child_widget.get())
+                    given_answer = float(child_widget.get())
                     actual_answer = homework_questions[question_num][1]
 
                     if given_answer == actual_answer:
@@ -238,7 +238,7 @@ def create_question(day):
     # Division
     # Mix
     if day >= 5: # Mix encounter
-        question_type = rng.randint(4)
+        question_type = rng.randint(0,3)
     else:
         question_type = day - 1
 
@@ -258,7 +258,7 @@ def create_question(day):
         answer = first * second
     elif question_type == 3:
         question += '/ '
-        answer = first / second
+        answer = round(first / second, 2)
     
     question += str(second)
 
@@ -318,12 +318,16 @@ def create_frame(base_root):
 def set_day(passed_in_day):
     global day
     global score
+    global homework_questions
+    homework_questions = []
     score = 0
     day = passed_in_day
 
 def next_day():
     global day
     global score
+    global homework_questions
+    homework_questions = []
     score = 0
     day += 1
 
