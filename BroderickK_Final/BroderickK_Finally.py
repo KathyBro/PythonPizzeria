@@ -9,7 +9,7 @@ from os import system
 import os.path
 
 my_player = ''
-file_name = "PythonPizzera.txt"
+file_name = "PythonPizzera.json"
 back_room_frame = ''
 root = ''
 
@@ -20,11 +20,6 @@ def save_game():
     global root
 
     calculate_percentage_score()
-    if back_room_frame != '':
-        back_room_frame.grid_forget()
-        back_room_frame = BackRoomView.create_frame(root)
-        back_room_frame.grid(row=1, column=0, sticky='news', columnspan=4)
-        root.update()
 
     with open(file_name, 'w') as file:
         name = my_player.name
@@ -32,6 +27,16 @@ def save_game():
         current_day = my_player.current_day
         player_info = [{"name":name, "math_grade":grade, "day":current_day}]
         file.write(json.dumps(player_info, indent=4))
+
+
+    my_player.current_day += 1
+
+    if back_room_frame != '':
+        back_room_frame.grid_forget()
+        back_room_frame = BackRoomView.create_frame(root)
+        back_room_frame.grid(row=1, column=0, sticky='news', columnspan=4)
+        root.update()
+
 
 def raise_frame(frame):
     KitchenView.get_newest_order()
@@ -47,6 +52,8 @@ def find_player():
             my_player.name = player_info[0]['name']
             my_player.math_grade = player_info[0]['math_grade']
             my_player.current_day = player_info[0]['day']
+        if my_player.current_day > 2:
+        BackRoomView.set_day(my_player.current_day)
     else:
         if my_player == '':
             my_player = player()
@@ -59,13 +66,12 @@ def calculate_percentage_score():
     current_grade = my_player.math_grade
 
     # Need to figure out what it is and then divide again
-    current_grade = current_grade * my_player.current_day
+    current_grade = current_grade * BackRoomView.get_day()
 
     current_grade += new_score
-    current_grade /= my_player.current_day * 10
-
-    BackRoomView.next_day()
-    my_player.current_day += 1
+    current_grade /= BackRoomView.get_day() * 10
+    my_player.math_grade = current_grade
+    
 
 if __name__ == '__main__':
     find_player()

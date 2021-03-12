@@ -1,7 +1,0 @@
-[
-    {
-        "name": "Player",
-        "math_grade": 0.0,
-        "day": 3
-    }
-]

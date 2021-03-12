@@ -21,17 +21,18 @@ def grade(parent_widget):
     # submit_button["state"] = "disabled"
     children_widgets = parent_widget.winfo_children()
     question_num = 0
-    for child_widget in children_widgets:
-        if child_widget.winfo_class() == 'Entry':
-            try:
-                given_answer = int(child_widget.get())
-                actual_answer = homework_questions[question_num][1]
+    if not score > 0:
+        for child_widget in children_widgets:
+            if child_widget.winfo_class() == 'Entry':
+                try:
+                    given_answer = int(child_widget.get())
+                    actual_answer = homework_questions[question_num][1]
 
-                if given_answer == actual_answer:
-                    score += 1
-                question_num += 1
-            except:
-                pass
+                    if given_answer == actual_answer:
+                        score += 1
+                    question_num += 1
+                except:
+                    pass
 
 
 def add_calculation_text(button_type):

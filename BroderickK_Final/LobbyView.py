@@ -178,10 +178,10 @@ def create_frame(root):
     canvas_background.grid(column = 0, row = 1, columnspan=10)
     lobby_canvas = canvas_background
 
-    image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
+    # image_background = PhotoImage(file=".\Pizzeria_Lobby.PNG")
 
-    canvas_background.background = image_background
-    bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
+    # canvas_background.background = image_background
+    # bg = canvas_background.create_image(0, 0, anchor=NW, image=image_background)
 
     # Customers
     draw_customers(canvas_background)
